@@ -1,0 +1,131 @@
+openapi: 3.0.0
+info:
+  contact: 
+    name: "Eugene Hsu"
+  title: "OpenAPI"
+  version: "1.0.0"
+servers:
+  - url: http://localhost:5000 
+    description: local
+paths:
+  "/user":
+    get:
+      description: Get all users
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - User
+    post:
+      description: Registration.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        description: User data
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User was created
+                  access_token:
+                    type: string
+        "400":
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Can not save to database
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - User
+  "/user/login":
+    post:
+      description: Login.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+        description: User data
+        required: true
+      responses:
+        "201":
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logged in as username
+                  access_token:
+                    type: string
+        "400":
+          description: User  doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Wrong credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      tags:
+        - User
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - username
+        - password
+        - name
+        - email
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        msg:
+          type: string

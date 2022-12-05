@@ -1,0 +1,11 @@
+flask
+flask_restful
+mysqlclient
+requests
+flask_sqlalchemy
+pymysql
+flask_httpauth
+Werkzeug
+flask-jwt-extended
+passlib
+Flask-Session
