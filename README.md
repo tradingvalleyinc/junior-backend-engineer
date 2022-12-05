@@ -1,39 +1,46 @@
-# python-junior-backend
+# flask-mysql-docker
+Here are two applications for backend server setup with flask and databases: mysql on docker service.
 
-Hi,
+## 1. Flask+MySQL
+This is an example of docker containers for flask and mysql connection. <br>
+Please follow to the link and get more explanations:<br>
+https://medium.com/@waynewu_25577/docker-flask-mysql-%E5%9F%BA%E6%9C%AC%E4%B8%B2%E6%8E%A5%E6%95%99%E5%AD%B8-77eff0871954
 
-此專案為 Tradingvalley 的 junior 後端工程師的試前作業，請 fork 此專案，以 python 撰寫每道問題。
+1. To use:
+First open your terminal and locate in flask-mysql folder, then type in:
+```
+docker pull mysql:5.7
+```
+```
+docker run -d --name mysql-server --network my-network -e MYSQL_ROOT_PASSWORD=secret mysql:5.7
+```
+```
+docker run -it --rm --network my-network mysql:5.7
+```
+It will start to build up mysql service. <br>
 
-完成後，請 PR 此專案。
+2. Then, open your browser and type in: 
+```
+http://0.0.0.0:5000/
+```
+You will first see an empty list for your current data, don't worry!!
+You can start to interact with the database by adding, updating and deleting the data.
+```
+POST: (register)
+curl -i -H "Content-Type: application/json" -X POST -d '{"username":"f", "password":"f", "name":"name", "email":"f@gmail.com"}' http://0.0.0.0:5000/user
 
-### 題目一：以 Flask 實作一個簡易的會員系統
+POST: (Login)
+curl -i -H "Content-Type: application/json" -X POST -d '{"username":"f", "password":"f"}' http://0.0.0.0:5000/user/login
 
-功能需求：
-
-1. 實作三隻 API （註冊、登入、獲取會員資料）
-    * [POST] 註冊
-    * [POST] 登入（如登入成功獲取 token）
-    * [GET] 獲取會員資料 （以 token 取得會員資料）
-2. 以 ORM 框架 SQLAlchemy 實作 MySQL
-3. 資料庫內容及格式可自行設計，但必須包含以下資訊
-    * username
-    * password
-    * name
-    * email
-4. 撰寫 OpenAPI Spec (yaml format)
+GET: (Get Users Information) 
+curl -i -H "Content-Type: application/json" -H"Authorization:Bearer TOKEN" -X GET http://0.0.0.0:5000/user
 
 
----------
-### 題目二：裝飾器的使用
+```
+Then you can see some data on your browser. And also you can log in your database by typing in:
+```
+docker run -it --rm --network my-network mysql:5.7 sh -c 'exec mysql -h"mysql-server" -P"3306" -uroot -p"root"'
+```
+We store our data in "mysql" database in docker container. 
+<br><br>
 
-功能需求：
-
-衍伸第一題，在登入的 API 中，實作一個裝飾器，每當是第一次登入時都會 print "Welcome back {name}".
-
----------
-
-### 交付項目：
-
-*  請以 python 3.10+ 撰寫，可自由選用擅長的套件
-*  若覺得需要，可以自由選用各類外部服務，如 cache
-*  請以 docker 建置及安裝各類外部服務
