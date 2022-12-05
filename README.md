@@ -20,7 +20,7 @@ It will start to build up mysql service. <br>
 docker build -t flask-app .
 ```
 ```
-docker run -p 5000:5000 --network my-network -v /絕對路徑/flask-app-folder:/app -d flask-app
+docker run -p 5000:5000 --network my-network -v /絕對路徑/python-junior-backend:/app -d flask-app
 ```
 It will start to build up flask api. <br>
 2. Then, open your browser and type in: 
