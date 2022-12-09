@@ -1,9 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, request
+from package.postgreSQL_config import dbConnection
 import json
 app = Flask(__name__)
 
-users = []
-
+# cur = dbConnection()
+conn = dbConnection()
 @app.route('/')
 def index():
     return '<h1>Hello world!!</h1>'
@@ -17,14 +18,17 @@ def member():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if(request.method == 'POST'):
-        user = {
-            "username":request.form['username'],
-            "password":request.form['password'],
-            "realname":request.form['realname'],
-            "email":request.form['email']
-        }
-        users.append(user)
-        print(users)
+        cur = conn.cursor()
+        cur.execute(
+            'INSERT INTO userinformationtable (username, password, realname, email)'
+            'VALUES (%s,%s,%s,%s)', 
+            (request.form['username'],
+            request.form['password'],
+            request.form['realname'],
+            request.form['email'])
+            )
+        conn.commit()
+        cur.close()
         return redirect('/login')
     else:
         return render_template('registerPage.html')
@@ -32,22 +36,29 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        logInUser = None
+        currentUser = None
         resMes = None
-        for i in range( len(users)):
-            if(users[i]['email'] == request.form['email']):
-                if(users[i]['password'] == request.form['password']):
-                    resMes = 'Success to log in'
-                    logInUser = users[i]
-                    logInUser = json.dumps(logInUser)
-                else:
-                    resMes = 'Incorrect password'
-                break
-        if(logInUser):
-            return redirect(url_for('member', reqArg = logInUser))
-        elif(resMes):
-            # print('There is no such user in db')
-            return render_template('loginPage.html', resMes = resMes)
+        cur = conn.cursor()
+        cur.execute(
+            'SELECT * FROM userinformationtable WHERE email = %s', 
+            (request.form['email'],))
+        searchData = cur.fetchone()
+        print(searchData)
+        cur.close()
+        if(searchData):
+            currentUser = {
+                "username":searchData[1],
+                "password":searchData[2],
+                "realname":searchData[3],
+                "email":searchData[4]
+            }
+            if (currentUser['password'] == request.form['password']):
+                resMes = 'Success to log in'
+                currentUser = json.dumps(currentUser)
+                return redirect(url_for('member', reqArg = currentUser))
+            else:
+                resMes = 'Incorrect password'
+                return render_template('loginPage.html', resMes = resMes)
         else:
             resMes = 'No such user was found'
             return render_template('loginPage.html', resMes = resMes)
