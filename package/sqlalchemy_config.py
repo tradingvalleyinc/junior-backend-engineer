@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from dotenv import load_dotenv
 load_dotenv()
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -14,10 +15,11 @@ def setUpDB(app):
     password=os.environ.get('postgre_password')
 
     app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{user}:{password}@{host}/{database}'
+    app.config['SECRET_KEY']= 'helloworld'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # silence the deprecation warning
     db.init_app(app)
 
-    class UserTable(db.Model):
+    class UserTable(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String, unique=True, nullable=False)
         password = db.Column(db.String, nullable=False)
