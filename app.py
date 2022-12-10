@@ -1,10 +1,11 @@
 from flask import Flask, render_template, redirect, url_for, request
-from package.postgreSQL_config import dbConnection
+from package.sqlalchemy_config import setUpDB, addUser
 import json
 app = Flask(__name__)
 
-# cur = dbConnection()
-conn = dbConnection()
+UserTable = setUpDB(app)
+
+
 @app.route('/')
 def index():
     return '<h1>Hello world!!</h1>'
@@ -18,17 +19,14 @@ def member():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if(request.method == 'POST'):
-        cur = conn.cursor()
-        cur.execute(
-            'INSERT INTO userinformationtable (username, password, realname, email)'
-            'VALUES (%s,%s,%s,%s)', 
-            (request.form['username'],
-            request.form['password'],
-            request.form['realname'],
-            request.form['email'])
-            )
-        conn.commit()
-        cur.close()
+        
+        user = UserTable(   
+            username = request.form['username'],
+            password = request.form['password'],
+            realname = request.form['realname'],
+            email = request.form['email'],
+        )
+        addUser(app, user)
         return redirect('/login')
     else:
         return render_template('registerPage.html')
@@ -37,20 +35,13 @@ def register():
 def login():
     if request.method == 'POST':
         currentUser = None
-        resMes = None
-        cur = conn.cursor()
-        cur.execute(
-            'SELECT * FROM userinformationtable WHERE email = %s', 
-            (request.form['email'],))
-        searchData = cur.fetchone()
-        print(searchData)
-        cur.close()
+        searchData = UserTable.query.filter_by(email=request.form['email']).first()
         if(searchData):
             currentUser = {
-                "username":searchData[1],
-                "password":searchData[2],
-                "realname":searchData[3],
-                "email":searchData[4]
+                "username":searchData.username,
+                "password":searchData.password,
+                "realname":searchData.realname,
+                "email":searchData.email
             }
             if (currentUser['password'] == request.form['password']):
                 resMes = 'Success to log in'
