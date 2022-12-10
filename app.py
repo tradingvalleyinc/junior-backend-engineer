@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, flash
 from package.sqlalchemy_config import setUpDB, addUser
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
@@ -42,8 +42,17 @@ def register():
             realname = request.form['realname'],
             email = request.form['email'],
         )
-        addUser(app, user)
-        return redirect('/login')
+        searchEmail = UserTable.query.filter_by(email=request.form['email']).first()
+        searchUsername = UserTable.query.filter_by(username=request.form['username']).first()
+        if not searchEmail and not searchUsername:
+            addUser(app, user)
+            return redirect('/login')
+        elif searchEmail:
+            flash('Email already exists')
+            return render_template('registerPage.html')
+        elif searchUsername:
+            flash('This username has been used')
+            return render_template('registerPage.html')
     else:
         return render_template('registerPage.html')
 
@@ -53,16 +62,16 @@ def login():
         searchData = UserTable.query.filter_by(email=request.form['email']).first()
         if(searchData):
             if (searchData.password == request.form['password']):
-                resMes = 'Success to log in'
+                # flash('Success to log in')
                 login_user(searchData)
                 generatedURL = f'member-{searchData.username}'
                 return redirect(generatedURL)
             else:
-                resMes = 'Incorrect password'
-                return render_template('loginPage.html', resMes = resMes)
+                flash('Incorrect password')
+                return render_template('loginPage.html')
         else:
-            resMes = 'No such user was found'
-            return render_template('loginPage.html', resMes = resMes)
+            flash('No such user was found')
+            return render_template('loginPage.html')
     else: 
         return render_template('loginPage.html')
 
