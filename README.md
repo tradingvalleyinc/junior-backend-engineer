@@ -104,7 +104,7 @@ Authorization:
   - [x] Flask framework
   - [x] POST /signUp
   - [x] POST /signIn
-  - [x] GET /userInfo
+  - [x] GET /userInfo (Authentication by Bearer Token)
   - [x] Database Table field contains (username, password ,name, email)
   - [x] ORM SQLAlchemy
   - [x] Input data validation
