@@ -1,39 +1,121 @@
 # python-junior-backend
 
-Hi,
+## Set up
 
-此專案為 Tradingvalley 的 junior 後端工程師的試前作業，請 fork 此專案，以 python 撰寫每道問題。
+1.  Change the filename .env_example to .env in path `/app`
+2.  Confirm the port 5001 and port 32000 are not used in your device.
+3.  ```bash
+    docker-compose up -d
+    ```
 
-完成後，請 PR 此專案。
+<br>
+* Your device needs to install docker, docker-compose first.
 
-### 題目一：以 Flask 實作一個簡易的會員系統
+<br>
 
-功能需求：
+---
 
-1. 實作三隻 API （註冊、登入、獲取會員資料）
-    * [POST] 註冊
-    * [POST] 登入（如登入成功獲取 token）
-    * [GET] 獲取會員資料 （以 token 取得會員資料）
-2. 以 ORM 框架 SQLAlchemy 實作 MySQL
-3. 資料庫內容及格式可自行設計，但必須包含以下資訊
-    * username
-    * password
-    * name
-    * email
-4. 撰寫 OpenAPI Spec (yaml format)
+<br>
 
+## Test the API (/signIn, /signuUp, /userInfo)
 
----------
-### 題目二：裝飾器的使用
+<br>
 
-功能需求：
+### \*Method 1: Swagger API
 
-衍伸第一題，在登入的 API 中，實作一個裝飾器，每當是第一次登入時都會 print "Welcome back {name}".
+[http://<your_server>:5001/apidocs/](http://yourserver:5001/apidocs/)
 
----------
+<br>
 
-### 交付項目：
+### Method 2: curl
 
-*  請以 python 3.10+ 撰寫，可自由選用擅長的套件
-*  若覺得需要，可以自由選用各類外部服務，如 cache
-*  請以 docker 建置及安裝各類外部服務
+/signUp
+
+```bash
+curl --location --request POST 'http://<your_server>:5001/signUp' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "1@gmail.com",
+    "name": "abc",
+    "username": "abc",
+    "password": "12345678"
+}'
+```
+
+/signIn
+
+```bash
+curl --location --request POST 'http://<your_server>:5001/signIn' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "email": "1@gmail.com",
+    "password": "12345678"
+}'
+```
+
+/userInfo
+
+```bash
+curl --location --request GET 'http://<your_server>/userInfo' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3MDg3MjkwMSwianRpIjoiNzkzNTUwNWYtODlmZC00ZDBlLWFhYTEtYzAxNTMwMDRmMjM1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1aWQiOjEsImVtYWlsIjoiMUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFiYyIsIm5hbWUiOiJhYmMifSwibmJmIjoxNjcwODcyOTAxLCJleHAiOjE2NzA4NzM4MDF9.fKBYUcc66wOHVci3XqmRZvTB6i6qT3YzKb3jVvwJMVg'
+```
+
+<br>
+
+### Method 3: postman
+
+/signUp
+
+```json
+Method: POST
+URL: "http://<your_server>:5001/signUp"
+requestBody:
+{
+    "email": "1@gmail.com",
+    "name": "abc",
+    "username": "abc",
+    "password": "12345678"
+}
+```
+
+/signIn
+
+```json
+Method: POST
+URL: "http://<your_server>:5001/signIn"
+requestBody:
+{
+    "email": "1@gmail.com",
+    "password": "12345678"
+}
+```
+
+/userInfo
+
+```json
+Method: GET
+URL: "http://<your_server>:5001/userInfo"
+Authorization:
+    Type: Bearer Token
+    Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3MDg3MjkwMSwianRpIjoiNzkzNTUwNWYtODlmZC00ZDBlLWFhYTEtYzAxNTMwMDRmMjM1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1aWQiOjEsImVtYWlsIjoiMUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFiYyIsIm5hbWUiOiJhYmMifSwibmJmIjoxNjcwODcyOTAxLCJleHAiOjE2NzA4NzM4MDF9.fKBYUcc66wOHVci3XqmRZvTB6i6qT3YzKb3jVvwJMVg
+```
+
+<br>
+*Note: Change your_server to your server domain name or IP.
+
+---
+
+## Requirement checklist
+
+- [x] 1. Implement a membership website
+  - [x] Flask framework
+  - [x] POST /signUp
+  - [x] POST /signIn
+  - [x] GET /userInfo
+  - [x] Database Table field contains(username, password ,name, email)
+  - [x] ORM SQLAlchemy
+  - [x] Input data validation
+  - [x] OpenAPI spec: swagger
+- [x] 2. Implement the decorator in /signIn API
+  - [x] First login print "Welcome back {name}".
+- [x] Deploy by docker

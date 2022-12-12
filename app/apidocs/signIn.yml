@@ -1,0 +1,82 @@
+openapi: 3.0.0
+tags:
+  - User
+description: The user signs in with email and password.
+consumes:
+  - application/json
+parameters:
+  - in: body
+    name: user
+    description: user signIn information.
+    schema:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: 123@gmail.com
+        password:
+          type: string
+          example: '12345678'
+responses:
+  200:
+    description: The user signs in successfully.
+    schema:
+      type: object
+      required:
+        - data
+        - msg
+      properties:
+        data:
+          type: object
+          example:
+            {
+              access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3MDgzODk5NywianRpIjoiMzRjMjA2ODQtZmQ4Yi00NWQwLWE1YmMtMjAxY2RhYzYxN2QwIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1aWQiOjYsImVtYWlsIjoiMUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFiYyIsIm5hbWUiOiJhYmMifSwibmJmIjoxNjcwODM4OTk3LCJleHAiOjE2NzA4Mzk4OTd9._s4zkb8YWJPpFK9En7NMFw0XdyNufATKh5iUU5VMNFM,
+            }
+        msg:
+          type: string
+          example: 'Sign in successfully!'
+  400:
+    description: The input data(email or password) is invalid!
+    schema:
+      type: object
+      required:
+        - data
+        - msg
+      properties:
+        data:
+          type: object
+          example: {}
+        msg:
+          type: string
+          example: 'Error: the email is invalid.'
+  401:
+    description: The user is unauthenticated(the email is not exist or the password is wrong).
+    schema:
+      type: object
+      required:
+        - data
+        - msg
+      properties:
+        data:
+          type: object
+          example: {}
+        msg:
+          type: string
+          example: 'Your email is not Exist in the system.'
+  500:
+    description: Server error.
+    schema:
+      type: object
+      required:
+        - data
+        - msg
+      properties:
+        data:
+          type: object
+          example: {}
+        msg:
+          type: string
+          example: 'The system is error. please contact with system administrator.'

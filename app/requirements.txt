@@ -1,0 +1,9 @@
+Flask
+cryptography
+python-dotenv
+flask_bcrypt
+flasgger
+PyMySQL
+SQLAlchemy
+flask_jwt_extended
+validators
