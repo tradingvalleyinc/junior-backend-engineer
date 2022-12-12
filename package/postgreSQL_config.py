@@ -10,4 +10,4 @@ def dbConnection():
         password=os.environ.get('postgre_password')
     )
     return conn
-dbConnection()
+# dbConnection()
