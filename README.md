@@ -2,11 +2,10 @@
 
 ## Set up
 
-1.  Change the filename .env_example to .env in path `/app`
-2.  Confirm the port 5001 and port 32000 are not used in your device.
-3.  ```bash
-    docker-compose up -d
-    ```
+1.  `cd app/`
+2.  `mv .env_example .env`
+3.  Confirm the port 5001 and port 32000 are not used in your device.
+4.  `docker-compose up -d`
 
 <br>
 * Your device needs to install docker, docker-compose first.

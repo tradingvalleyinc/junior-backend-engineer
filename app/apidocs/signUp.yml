@@ -1,13 +1,13 @@
 openapi: 3.0.0
 tags:
   - User
-description: A new user signs up and be recorded in the database.
+description: A new user signs up and the user information is recorded in the database.
 consumes:
   - application/json
 parameters:
   - in: body
     name: user
-    description: user signUp information.
+    description: The user sign up information.
     schema:
       type: object
       required:
@@ -30,7 +30,7 @@ parameters:
           example: 12345678
 responses:
   200:
-    description: The user signs up in successfully.
+    description: The user signs up successfully.
     schema:
       type: object
       required:
@@ -44,7 +44,7 @@ responses:
           type: string
           example: 'Sign up successfully!'
   400:
-    description: The input data(email/ name/ username/ password) is invalid or the email is already exist!
+    description: The input data(email/ name/ username/ password) is invalid or the email is already exist.
     schema:
       type: object
       required:
@@ -58,7 +58,7 @@ responses:
           type: string
           example: 'Error: the length of password is over 20 or less 8.'
   500:
-    description: Server error.
+    description: Server error
     schema:
       type: object
       required:
@@ -70,4 +70,4 @@ responses:
           example: {}
         msg:
           type: string
-          example: 'The system gets error. please contact with system administrator.'
+          example: 'The system gets error. Please contact with system administrator.'
