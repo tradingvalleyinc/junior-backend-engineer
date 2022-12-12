@@ -9,21 +9,15 @@
 
 <br>
 * Your device needs to install docker, docker-compose first.
-
 <br>
 
 ---
 
-<br>
-
 ## Test the API (/signIn, /signuUp, /userInfo)
-
-<br>
 
 ### \*Method 1: Swagger API
 
 [http://<your_server>:5001/apidocs/](http://yourserver:5001/apidocs/)
-
 <br>
 
 ### Method 2: curl
@@ -51,13 +45,13 @@ curl --location --request POST 'http://<your_server>:5001/signIn' \
     "password": "12345678"
 }'
 ```
-
 /userInfo
 
 ```bash
 curl --location --request GET 'http://<your_server>/userInfo' \
 --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3MDg3MjkwMSwianRpIjoiNzkzNTUwNWYtODlmZC00ZDBlLWFhYTEtYzAxNTMwMDRmMjM1IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJ1aWQiOjEsImVtYWlsIjoiMUBnbWFpbC5jb20iLCJ1c2VybmFtZSI6ImFiYyIsIm5hbWUiOiJhYmMifSwibmJmIjoxNjcwODcyOTAxLCJleHAiOjE2NzA4NzM4MDF9.fKBYUcc66wOHVci3XqmRZvTB6i6qT3YzKb3jVvwJMVg'
 ```
+*Note: Change <your_server> to your server domain name or IP & --data-raw's json data.
 
 <br>
 
@@ -65,7 +59,7 @@ curl --location --request GET 'http://<your_server>/userInfo' \
 
 /signUp
 
-```json
+```
 Method: POST
 URL: "http://<your_server>:5001/signUp"
 requestBody:
@@ -79,7 +73,7 @@ requestBody:
 
 /signIn
 
-```json
+```
 Method: POST
 URL: "http://<your_server>:5001/signIn"
 requestBody:
@@ -91,7 +85,7 @@ requestBody:
 
 /userInfo
 
-```json
+```
 Method: GET
 URL: "http://<your_server>:5001/userInfo"
 Authorization:
@@ -100,7 +94,7 @@ Authorization:
 ```
 
 <br>
-*Note: Change your_server to your server domain name or IP.
+*Note: Change <your_server> to your server domain name or IP & --data-raw's json data.
 
 ---
 
@@ -111,7 +105,7 @@ Authorization:
   - [x] POST /signUp
   - [x] POST /signIn
   - [x] GET /userInfo
-  - [x] Database Table field contains(username, password ,name, email)
+  - [x] Database Table field contains (username, password ,name, email)
   - [x] ORM SQLAlchemy
   - [x] Input data validation
   - [x] OpenAPI spec: swagger
