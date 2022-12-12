@@ -9,17 +9,17 @@ db = SQLAlchemy()
 def setUpDB(app):
     # global db
 
-    host=os.environ.get('postgre_host')
-    database=os.environ.get('postgre_database')
-    user=os.environ.get('postgre_user')
-    password=os.environ.get('postgre_password')
+    host=os.environ.get('mysql_local_host')
+    database=os.environ.get('mysql_local_database')
+    user=os.environ.get('mysql_local_user')
+    password=os.environ.get('mysql_local_password')
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://{user}:{password}@{host}/{database}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://{user}:{password}@{host}/{database}'
     app.config['SECRET_KEY']= 'helloworld'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # silence the deprecation warning
     db.init_app(app)
 
-    class UserTable(db.Model, UserMixin):
+    class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String, unique=True, nullable=False)
         password = db.Column(db.String, nullable=False)
@@ -27,7 +27,7 @@ def setUpDB(app):
         email = db.Column(db.String, unique=True, nullable=False)
     with app.app_context():
         db.create_all()
-    return UserTable
+    return User
 
 def addUser(app, user):
     with app.app_context():

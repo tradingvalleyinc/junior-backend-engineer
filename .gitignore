@@ -1,3 +1,4 @@
 .env
 postgreSQL_config
+MySQL_config
 .vscode
