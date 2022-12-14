@@ -4,11 +4,11 @@ services:
     # image: mysql
     ports:
       - 3306:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=my-secret-pw
-      - MYSQL_DATABASE=tradingValley_userdb
-      - MYSQL_USER=localUser
-      - MYSQL_PASSWORD=password
+    # environment:
+    #   - MYSQL_ROOT_PASSWORD=my-secret-pw
+    #   - MYSQL_DATABASE=tradingValley_userdb
+    #   - MYSQL_USER=localUser
+    #   - MYSQL_PASSWORD=password
     container_name: mysql_container
     volumes:
       - dbservice-db:/var/lib/mysql
@@ -20,7 +20,8 @@ services:
     depends_on:
       - dbservice
     ports:
-      - 5001:5000
+      - 5555:5555
+    container_name: server_container
 
 volumes:
   dbservice-db:
