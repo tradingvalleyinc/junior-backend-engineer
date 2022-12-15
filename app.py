@@ -18,6 +18,15 @@ jwt = JWTManager(app)
 
 UserTable = setUpDB(app)
 
+def printRequestUser(memFunc):
+    def wrapper():
+        r = memFunc()
+        jwt_certificated_data = get_jwt_identity()
+        jwt_certificated_data = json.loads(jwt_certificated_data)
+        print(f"Welcome back{jwt_certificated_data['username']}")
+        return r
+    return wrapper
+
 
 @app.route('/', methods=["GET"])
 def index():
@@ -26,7 +35,7 @@ def index():
 
 @app.route('/member', methods=['GET'])
 @jwt_required()
-
+@printRequestUser
 def member():    
     tokenFromHeaders = request.headers['Authorization'].split(' ')[1]
     # print(tokenFromHeaders)
