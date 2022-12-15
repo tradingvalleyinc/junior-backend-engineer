@@ -1,3 +1,4 @@
-postgreSQL_config
-MySQL_config
+./postgreSQL_config
+./MySQL_config
 .vscode
+__pycache__

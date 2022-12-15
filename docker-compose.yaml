@@ -1,29 +1,23 @@
 services:
-  dbservice:
+  mysql-server:
     build: ./mysql_init
-    # image: mysql
     ports:
       - 3306:3306
-    # environment:
-    #   - MYSQL_ROOT_PASSWORD=my-secret-pw
-    #   - MYSQL_DATABASE=tradingValley_userdb
-    #   - MYSQL_USER=localUser
-    #   - MYSQL_PASSWORD=password
     container_name: mysql_container
     volumes:
-      - dbservice-db:/var/lib/mysql
+      - mysql-server_db:/var/lib/mysql
   
-  python-app:
+  flask-server:
     build: ./
     restart: always
     command: python3 ./app.py;
     depends_on:
-      - dbservice
+      - mysql-server
     ports:
       - 5555:5555
-    container_name: server_container
+    container_name: flask_container
 
 volumes:
-  dbservice-db:
+  mysql-server_db:
     driver: local
 
