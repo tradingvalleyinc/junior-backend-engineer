@@ -19,12 +19,19 @@ def setUpDB(app):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # silence the deprecation warning
     db.init_app(app)
 
+
     class User(db.Model, UserMixin):
         id = db.Column(db.Integer, primary_key=True)
         username = db.Column(db.String, unique=True, nullable=False)
         password = db.Column(db.String, nullable=False)
         realname = db.Column(db.String, nullable=False)
         email = db.Column(db.String, unique=True, nullable=False)
+    # class User(db.Model, UserMixin):
+    #     id = db.Column(db.Integer, primary_key=True)
+    #     username = db.Column(db.String, unique=True, nullable=False)
+    #     password = db.Column(db.String, nullable=False)
+    #     realname = db.Column(db.String, nullable=False)
+    #     email = db.Column(db.String, unique=True, nullable=False)
     with app.app_context():
         db.create_all()
     return User

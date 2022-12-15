@@ -1,37 +1,39 @@
 from flask import Flask, render_template, redirect, request, flash
 from package.sqlalchemy_config import setUpDB, addUser
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    # create_refresh_token, jwt_refresh_token_required,
+    get_jwt_identity
+    )
+import datetime
+from flask import jsonify
+import json
 
 app = Flask(__name__)
 
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
+# Setup the Flask-JWT-Extended extension
+app.config['JWT_SECRET_KEY'] = 'secret'
+jwt = JWTManager(app)
 
 UserTable = setUpDB(app)
 
-@login_manager.user_loader
-def load_user(user_id):
-    return UserTable.query.get(user_id)
 
-
-@app.route('/')
+@app.route('/', methods=["GET"])
 def index():
-    return '<h1>Hello world!!</h1>'
+    print('hello')
+    return redirect('http://127.0.0.1:5000/login')
 
-@app.route('/member-<username>', methods=['GET'])
-@login_required
-def member(username):
+@app.route('/member', methods=['GET'])
+@jwt_required()
+
+def member():    
+    tokenFromHeaders = request.headers['Authorization'].split(' ')[1]
+    # print(tokenFromHeaders)
+    jwt_certificated_data = get_jwt_identity()
+    jwt_certificated_data = json.loads(jwt_certificated_data)
     
-    # To convert class(current_user) to object(user) so that html could read
-    user = {
-        'username':current_user.username,
-        'password':current_user.password,
-        'realname':current_user.realname,
-        'email':current_user.email
-    }
-    
-    return render_template('memberPage.html', user = user)
+    return render_template('memberPage.html', user = jwt_certificated_data)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -60,12 +62,21 @@ def register():
 def login():
     if request.method == 'POST':
         searchData = UserTable.query.filter_by(email=request.form['email']).first()
+        # print(searchData)
         if(searchData):
             if (searchData.password == request.form['password']):
                 # flash('Success to log in')
-                login_user(searchData)
-                generatedURL = f'member-{searchData.username}'
-                return redirect(generatedURL)
+                currentUser = {
+                    'username':searchData.username,
+                    'password':searchData.password,
+                    'realname':searchData.realname,
+                    'email':searchData.email
+                }
+                access_token = create_access_token(identity=json.dumps(currentUser), expires_delta=datetime.timedelta(minutes=15))
+                return jsonify(access_token=access_token)
+    
+                # generatedURL = f'/member-{searchData.username}/'
+                # return redirect(f"http://127.0.0.1:5000/member-{searchData.username}")
             else:
                 flash('Incorrect password')
                 return render_template('loginPage.html')
@@ -75,11 +86,11 @@ def login():
     else: 
         return render_template('loginPage.html')
 
-@app.route('/logout', methods=['POST'])
-@login_required
-def logout():
-    logout_user()
-    return redirect('/login')
+# @app.route('/logout', methods=['POST'])
+# @login_required
+# def logout():
+#     logout_user()
+#     return redirect('/login')
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(debug = True, port=5000)
