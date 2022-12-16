@@ -2,7 +2,6 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from dotenv import load_dotenv
 load_dotenv()
-from flask_login import UserMixin
 
 db = SQLAlchemy()
 

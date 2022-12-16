@@ -1,0 +1,173 @@
+openapi: 3.0.3
+info:
+  title: Trading Valley Assignment
+  description: |-
+    
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: samsheu1997@gmail.com  
+  
+  version: 0.0.1
+
+servers:
+  - url: http://127.0.0.1:5555
+tags:
+  - name: user
+    description: Operations about user
+paths:
+  /register:
+    get:
+      tags:
+        - user
+      summary: To show register page
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+                example: This endpoint and method to show registerPage.html
+    post:
+      tags:
+        - user
+      summary: Create user information
+      requestBody:
+        description: Build a new user
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RegistUser'
+      responses:
+        '201':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Succeed to build user
+        '200':
+          description: not a successful operation for storing user
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 
+                  - Email already exists
+                  - This username has been used
+  /login:
+    get:
+      tags:
+        - user
+      summary: To show login page
+      responses:
+         '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: string
+                example: This endpoint and method is to show registerPage.html
+    post:
+      tags:
+        - user
+      summary: Login user
+      requestBody:
+        description: Login user
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+      responses:
+        '200':
+          description: not a successful operation for loging in user
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 
+                  - Incorrect password
+                  - No such user was found
+        '201':
+          description: successful operation for getting a token
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"access_token": "jnhbghjkjhnbvcftyuijnbvcdftg"}
+  /member:
+    get:
+      tags:
+        - user
+      summary: This api should be authorized
+      security:
+        - bearerAuth: []
+      description: ''
+      responses:
+        '200':
+          description: a successful operation with token in header
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Welcome back {name}
+        '401':
+          description: token not found in Header
+          content:
+            application/json:
+              schema:
+                type: object
+                example: 
+                  - {"msg": "Missing Authorization Header"}
+                  - {"msg": "Token has expired"}
+        '422':
+          description: token was deprecated or missing some parts
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {"msg": "Not enough segments"}
+        default:
+          description: successful operation
+  
+components:
+  schemas:
+    RegistUser:
+      required:
+        - username
+        - password
+        - realname
+        - email
+      type: object
+      properties:
+        username:
+          type: string
+          example: test_user
+        password:
+          type: string
+          example: test_password
+        realname:
+          type: string
+          example: test_realname
+        email:
+          type: string
+          example: test@email.com
+    LoginUser:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+          example: test_email
+        password:
+          type: string
+          example: test_password
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: [] 
